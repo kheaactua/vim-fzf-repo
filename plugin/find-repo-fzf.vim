@@ -47,15 +47,26 @@ endfunction
 
 command! FindRepo call <SID>root()
 
+" https://dmerej.info/blog/post/vim-cwd-and-neovim/
+" Discusses the tch command in neovim
+" and shows some other ways to cd, and issues with stuff
 
-command! -nargs=* -bang GRepoGrep
-  \ call fzf#vim#grep(
-  \   'repo grep --cached --ignore-case  -- '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+function s:RepoGrep(query, fullscreen)
+  let g:repo_dir='/opt/android-src/aos'
+  let cmd = 'repo grep --cached --ignore-case  -- '.shellescape(a:query)
+  let options = {'dir': g:repo_dir}
+  let has_column = 0
+  call fzf#vim#grep(cmd, has_column, fzf#vim#with_preview(options), a:fullscreen)
+endfunction
 
-" command! -nargs=* -bang GRepoGrepIW
-"    \ call fzf#vim#grep(
-"    \   'repo grep --cached --ignore-case -e '.shellescape(expand('<cword>')), 1,
-"    \   fzf#vim#with_preview(), <bang>0)
+command! -nargs=* -bang GRepoGrep call RepoGrep(<q-args>, <bang>0)
+
+function s:RepoFiles(fullscreen)
+  let g:repo_dir='/opt/android-src/aos'
+  let options = {}
+  call fzf#vim#files(g:repo_dir, fzf#vim#with_preview(options), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang GRepoFiles call s:RepoFiles(<bang>0)
 
 " vim: set ts=2 sw=2 tw=78 expandtab :
