@@ -1,5 +1,10 @@
 " Mostly taken from airblade/vim-rooter
 
+if exists('g:loaded_vim_fzf_repo') || &cp
+  finish
+endif
+let g:loaded_vim_fzf_repo = 1
+
 if !exists('g:repo_dir')
   let g:repo_dir = ''
 endif
@@ -63,6 +68,9 @@ command! -nargs=* -bang GRepoGrep call RepoGrep(<q-args>, <bang>0)
 
 function s:RepoFiles(fullscreen)
   let g:repo_dir='/opt/android-src/aos'
+
+  " Gotta find a better solution
+  let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude out'
   let options = {}
   call fzf#vim#files(g:repo_dir, fzf#vim#with_preview(options), a:fullscreen)
 endfunction
