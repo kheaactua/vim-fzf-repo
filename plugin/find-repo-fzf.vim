@@ -1,4 +1,7 @@
 " Mostly taken from airblade/vim-rooter
+" Docs: https://vim.fandom.com/wiki/How_to_write_a_plugin
+" TODO:
+"  - namespace functions
 
 if exists('g:loaded_vim_fzf_repo') || &cp
   finish
@@ -57,6 +60,7 @@ command! FindRepo call <SID>root()
 " and shows some other ways to cd, and issues with stuff
 
 function s:RepoGrep(query, fullscreen)
+  call s:root()
   let g:repo_dir='/opt/android-src/aos'
   let cmd = 'repo grep --cached --ignore-case  -- '.shellescape(a:query)
   let options = {'dir': g:repo_dir}
@@ -76,5 +80,16 @@ function s:RepoFiles(fullscreen)
 endfunction
 
 command! -nargs=* -bang GRepoFiles call s:RepoFiles(<bang>0)
+
+
+" command! -nargs=* -bang GRepoGrep1
+"   \ call fzf#vim#grep(
+"   \   'repo grep --cached --ignore-case  -- wget', 0,
+"   \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+
+" command! -nargs=* -bang GRepoGrepIW
+"    \ call fzf#vim#grep(
+"    \   'repo grep --cached --ignore-case -e '.shellescape(expand('<cword>')), 1,
+"    \   fzf#vim#with_preview(), <bang>0)
 
 " vim: set ts=2 sw=2 tw=78 expandtab :
