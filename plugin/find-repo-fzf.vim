@@ -61,7 +61,6 @@ command! FindRepo call <SID>root()
 
 function s:RepoGrep(query, fullscreen)
   call s:root()
-  let g:repo_dir='/opt/android-src/aos'
   let cmd = 'repo grep --cached --ignore-case  -- '.shellescape(a:query)
   let options = {'dir': g:repo_dir}
   let has_column = 0
@@ -71,7 +70,7 @@ endfunction
 command! -nargs=* -bang GRepoGrep call RepoGrep(<q-args>, <bang>0)
 
 function s:RepoFiles(fullscreen)
-  let g:repo_dir='/opt/android-src/aos'
+  call s:root()
 
   " Gotta find a better solution
   let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude out'
