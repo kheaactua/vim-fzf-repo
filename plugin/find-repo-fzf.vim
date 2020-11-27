@@ -69,11 +69,20 @@ endfunction
 
 command! -nargs=* -bang GRepoGrep call RepoGrep(<q-args>, <bang>0)
 
-function s:RepoFiles(fullscreen)
+function! s:RepoFiles(fullscreen)
   call s:root()
 
   " Gotta find a better solution
-  let $FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude out'
+  let FD_CMD=''
+  if executable('fd')
+    FD_CMD='fd'
+  elseif executable('fdfind')
+    let FD_CMD='fdfind'
+  endif
+  echo "FD_CMD = " . FD_CMD
+  if FD_CMD != ''
+    let $FZF_DEFAULT_COMMAND=FD_CMD.' --type f --hidden --follow --exclude .git --exclude out'
+  endif
   let options = {}
   call fzf#vim#files(g:repo_dir, fzf#vim#with_preview(options), a:fullscreen)
 endfunction
