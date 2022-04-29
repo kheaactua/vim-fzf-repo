@@ -73,13 +73,13 @@ function! s:RepoFiles(fullscreen)
   call s:root()
 
   " Gotta find a better solution
+  " The bin name for fd depends on how it was installed, via cargo or apt.
   let FD_CMD=''
   if executable('fd')
     FD_CMD='fd'
   elseif executable('fdfind')
     let FD_CMD='fdfind'
   endif
-  echo "FD_CMD = " . FD_CMD
   if FD_CMD != ''
     let $FZF_DEFAULT_COMMAND=FD_CMD.' --type f --hidden --follow --exclude .git --exclude out'
   endif
